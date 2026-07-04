@@ -9,19 +9,18 @@ try:
                 }
     
     def categorical_summary(df):
-        categoricalcol = ["country","Weekday"]
+        categoricalcol = ["Country","Weekday"]
         summary = {}
         for i in categoricalcol:
             summary[i] = (
-                df(i).value_counts().head(10)
+                df[i].value_counts().head(10)
             )
         return summary
     
 
     def numerical_summary(df):
-        return df[
-            "Quantity", "UnitPrice", "Revenue"
-        ].describe()
+        numericalcols = ["Quantity", "UnitPrice", "Revenue"]
+        return df[numericalcols].describe()
     
     def revenue_analysis(df):
         return{

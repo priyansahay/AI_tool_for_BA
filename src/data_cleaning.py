@@ -51,5 +51,45 @@ def removed_invalid_price(df):
     logger.info(f"Deleted {initialrows - len(df)} rows with Invalid price records.")
     return df
 
+def standardize_ID(df):
+    df["CustomerID"] = (df["CustomerID"].astype(int).astype(str))
+    return df
+
+def revenue_column(df):
+    df["Revenue"]=(df["Quantity"]*df["Unitprice"])
+    return df
+
+def create_date(df):
+    df["Year"] = df["InvoiceDate"].dt.year
+    df["Month"] = df["InvoiceDate"].dt.month
+    df["Quarter"] = df["InvoiceDate"].dt.quarter
+    df["Day"] = df["InvoiceDate"].dt.day
+    df["Weekday"] = df["InvoiceDate"].dt.day_name()
+    return df
+
+def save_clean_data(df, outputpath):
+    df.to_csv(outputpath, index = False)
+    logger.info(f"Cleaned dataset saved to {outputpath}")
+
+def cleaning_summary(original_df, cleaned_df):
+    return {
+        "original_rows" : len(original_df),
+        "cleaned_df" : len(cleaned_df),
+        "rows_removed" : len(original_df) - len (cleaned_df)
+    }
+
+def clean_data(df):
+    logger.info("Started Cleaning Data...\n")
+    df = remove_duplicates(df)
+    df = convert_date_column(df)
+    df = remove_missing_customer_id(df)
+    df = remove_missing_description(df)
+    df = removed_cancel_orders(df)
+    df = remove_negative_quant(df)
+    df = removed_invalid_price(df)
+    df = standardize_ID(df)
+    df = revenue_column(df)
+    df = create_date(df)
+    logger.info("Data Cleaning completed...\n")
 
 

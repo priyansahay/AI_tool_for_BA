@@ -42,7 +42,7 @@ try:
         return fig
 
     def plot_top_product_treemap(df):
-        product_data = (df.groupby("Description")["Reveue"].sum().reset_index().sort_values(by = "Revenue", ascending = False).head(20))
+        product_data = (df.groupby("Description")["Revenue"].sum().reset_index().sort_values(by = "Revenue", ascending = False).head(20))
         fig = px.treemap(product_data, path = ["Description"],values="Revenue", title = "Top Product revenue Map")
         return fig
 

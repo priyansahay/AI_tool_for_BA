@@ -22,7 +22,7 @@ try:
                 random_state = 42,
                 n_init = 10
             )
-            model.fit(scale_features)
+            model.fit(scaled_func)
             inertia.append(model.inertia_)
         elbow_df = pd.DataFrame({
             "Clusters" : list(cluster_range),
@@ -40,7 +40,7 @@ try:
             random_state=42,
             n_init=10
         )
-        model.fit_transform(scale_features)
+        model.fit_transform(scaled_features)
         return model
     
     def assign_clusters(rfm_df, model, scaled_features):

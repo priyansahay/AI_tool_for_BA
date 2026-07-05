@@ -5,6 +5,7 @@ from src.eda import country_analysis, product_analysis, revenue_analysis,weekday
 import logging
 from src.visualization import plot_monthly_sales, plot_top_customers, plot_revenue_distribution, plot_country_revenue,plot_top_products,plot_coorelation_heatmap,plot_top_product_treemap,plot_country_revenue_map
 from src.feature_engineering import feature_engineering_pipeline,save_features_dataset
+from src.customer_segmentation import save_model, save_segmented_data, segmentation_pipeline
 import pandas as pd
 from pathlib import Path
 
@@ -15,6 +16,8 @@ rfm_features_path = r"data/processed/rfm_features.csv"
 customers_features_path = r"data/processed/customers_features.csv"
 churn_features_path = r"data/processed/churn_features.csv"
 sales_features_path = r"data/processed/sales_features.csv"
+segmented_data_path = r"data/processed/customer_segments.csv"
+segmentation_model_path = r"model/segmentation_model.pkl"
 
 
 def main():
@@ -63,7 +66,23 @@ def main():
             logging.info(f"Churn Feature Shape: {churn_feature_df.shape}\n")
             logging.info(f"Sales Features Shape: {sales_feature_df.shape}\n")
 
+            # CUSTOMER SEGMENTATION
+            logging.info("Starting Customer Segmentation..")
+            if Path(segmented_data_path).exists():
+                segmented_df = pd.read_csv(segmented_data_path)
+
+            else:
+                segmentation_output = (segmentation_pipeline(rfm_df,n_clusters=4))
+                segmented_df = (segmentation_output["segmented_df"])
+                cluster_summary_df = (segmentation_output["summary"])
+                segmentation_model = (segmentation_output["model"])
+                save_clean_data(segmented_df,segmented_data_path)
+                save_model(segmentation_model,segmentation_model_path)
+                print(f"{cluster_summary_df}\n")
+
+
         else:
+
             # DATA INGESTION
             logging.info("Pipeline Started\n")
             df = load_data(raw_data_path)

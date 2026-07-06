@@ -19,7 +19,7 @@ churn_features_path = r"data/processed/churn_features.csv"
 sales_features_path = r"data/processed/sales_features.csv"
 segmented_data_path = r"data/processed/customer_segments.csv"
 segmentation_model_path = r"model/segmentation_model.pkl"
-forecast_model_path = r"models/forecast_model.pkl"
+forecast_model_path = r"model/forecast_model.pkl"
 
 
 def main():

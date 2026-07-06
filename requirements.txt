@@ -2,3 +2,5 @@ pandas
 plotly
 scikit-learn
 joblib
+xgboost
+libomp

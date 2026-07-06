@@ -6,6 +6,7 @@ import logging
 from src.visualization import plot_monthly_sales, plot_top_customers, plot_revenue_distribution, plot_country_revenue,plot_top_products,plot_coorelation_heatmap,plot_top_product_treemap,plot_country_revenue_map
 from src.feature_engineering import feature_engineering_pipeline,save_features_dataset
 from src.customer_segmentation import save_model, save_segmented_data, segmentation_pipeline
+from src.sales_forecasting import forecasting_pipeline, save_forecasting_model
 import pandas as pd
 from pathlib import Path
 
@@ -18,6 +19,7 @@ churn_features_path = r"data/processed/churn_features.csv"
 sales_features_path = r"data/processed/sales_features.csv"
 segmented_data_path = r"data/processed/customer_segments.csv"
 segmentation_model_path = r"model/segmentation_model.pkl"
+forecast_model_path = r"models/forecast_model.pkl"
 
 
 def main():
@@ -34,20 +36,20 @@ def main():
             print(f"REVENUE ANALYSIS: \n{revenue_analysis(cleaned_df)}")
 
             #  ------  VISUALITIONS -----
-            revenue_map = plot_country_revenue_map(cleaned_df)
-            revenue_map.show()
+            # revenue_map = plot_country_revenue_map(cleaned_df)
+            # revenue_map.show()
 
-            coorelation_map = plot_coorelation_heatmap(cleaned_df)
-            coorelation_map.show()
+            # coorelation_map = plot_coorelation_heatmap(cleaned_df)
+            # coorelation_map.show()
 
-            top_products_fig = plot_top_product_treemap(cleaned_df)
-            top_products_fig.show()
+            # top_products_fig = plot_top_product_treemap(cleaned_df)
+            # top_products_fig.show()
 
-            country_revenue = plot_country_revenue_map(cleaned_df)
-            country_revenue.show()
+            # country_revenue = plot_country_revenue_map(cleaned_df)
+            # country_revenue.show()
 
-            monthly_sales_fig = plot_monthly_sales(cleaned_df)
-            monthly_sales_fig.show()
+            # monthly_sales_fig = plot_monthly_sales(cleaned_df)
+            # monthly_sales_fig.show()
 
 
 
@@ -79,6 +81,20 @@ def main():
                 save_clean_data(segmented_df,segmented_data_path)
                 save_model(segmentation_model,segmentation_model_path)
                 print(f"{cluster_summary_df}\n")
+
+            # SALES FORECASTING
+            logging.info("Starting Sales Forecasting...")
+            sales_feature_df = pd.read_csv(sales_features_path)
+            forecasting_output = (forecasting_pipeline(sales_feature_df))
+            forecast_model = forecasting_output["model"]
+            forecast_metrics = forecasting_output["metrics"]
+            next_day_forecast = forecasting_output["forecast"]
+            forecast_fig = forecasting_output["forecast_fig"]
+            save_forecasting_model(forecast_model,forecast_model_path)
+            print(f"FORECASTING METRICS\n{forecast_metrics}")
+            print(f"Rs. {next_day_forecast:,.2f}")
+            forecast_fig.show()
+            logging.info("Forecast pipeline run successfully")
 
 
         else:

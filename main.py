@@ -8,6 +8,7 @@ from src.feature_engineering import feature_engineering_pipeline,save_features_d
 from src.customer_segmentation import save_model, save_segmented_data, segmentation_pipeline
 from src.sales_forecasting import forecasting_pipeline, save_forecasting_model
 from src.churn_prediction import save_churn_model,churn_prediction_pipeline,save_churn_prediction
+from src.anomoly_detection import anomaly_detection_pipeline, save_anomaly_model, save_anomaly_results
 import pandas as pd
 from pathlib import Path
 
@@ -23,6 +24,8 @@ segmentation_model_path = r"model/segmentation_model.pkl"
 forecast_model_path = r"model/forecast_model.pkl"
 churn_model_path = r"model/churn_model.pkl"
 churn_prediction_path = r"data/processed/churn_prediction.csv"
+anomaly_model_path = r"model/anomaly_model.pkl"
+anomaly_results_path = r"data/processed/anomaly_results.csv"
 
 def main():
     try:
@@ -40,16 +43,12 @@ def main():
             #  ------  VISUALITIONS -----
             revenue_map = plot_country_revenue_map(cleaned_df)
             revenue_map.show()
-
             coorelation_map = plot_coorelation_heatmap(cleaned_df)
             coorelation_map.show()
-
             top_products_fig = plot_top_product_treemap(cleaned_df)
             top_products_fig.show()
-
             country_revenue = plot_country_revenue_map(cleaned_df)
             country_revenue.show()
-
             monthly_sales_fig = plot_monthly_sales(cleaned_df)
             monthly_sales_fig.show()
 
@@ -70,7 +69,8 @@ def main():
             logging.info(f"Churn Feature Shape: {churn_feature_df.shape}\n")
             logging.info(f"Sales Features Shape: {sales_feature_df.shape}\n")
 
-            # CUSTOMER SEGMENTATION
+
+            # --- CUSTOMER SEGMENTATION ---
             logging.info("Starting Customer Segmentation..")
             if Path(segmented_data_path).exists():
                 segmented_df = pd.read_csv(segmented_data_path)
@@ -84,7 +84,8 @@ def main():
                 save_model(segmentation_model,segmentation_model_path)
                 print(f"{cluster_summary_df}\n")
 
-            # SALES FORECASTING
+
+            # --- SALES FORECASTING ---
             logging.info("Starting Sales Forecasting...")
             sales_feature_df = pd.read_csv(sales_features_path)
             forecasting_output = (forecasting_pipeline(sales_feature_df))
@@ -98,7 +99,8 @@ def main():
             forecast_fig.show()
             logging.info("Forecast pipeline run successfully")
 
-            # CHURN PREDICTION
+
+            # --- CHURN PREDICTION ---
             logging.info("Churn Prediction started...")
             churn_output = (churn_prediction_pipeline(churn_feature_df))
             churn_model = churn_output["model"]
@@ -110,6 +112,22 @@ def main():
             print(f"CHURN METRICS\n{churn_metrics}\n")
             print(f"TOP CHURN DRIVERS\n{feature_importance.head(10)}\n")
             logging.info("Churn Prediction ran successfully...")
+
+
+            # --- ANOMALY DETECTION ---
+            logging.info("Anomaly Detection started...")
+            anomaly_output = (anomaly_detection_pipeline(sales_feature_df))
+            anomaly_model = (anomaly_output["model"])
+            anomaly_results = (anomaly_output["result_df"])
+            anomaly_summary_df = (anomaly_output["summary"])
+            top_anomalies = (anomaly_output["anomaly_fig"])
+            anomaly_count = (anomaly_output["anomaly_count"])
+            anomaly_fig = (anomaly_output["anomaly_fig"])
+            save_anomaly_model(anomaly_model, anomaly_model_path)
+            save_anomaly_results(anomaly_results, anomaly_results_path)
+            print(f"Anomaly Count{anomaly_count}\n")
+            logging.info("Anomaly Detection completed...")
+            anomaly_fig.show()
 
 
         else:

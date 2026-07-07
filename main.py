@@ -20,7 +20,8 @@ sales_features_path = r"data/processed/sales_features.csv"
 segmented_data_path = r"data/processed/customer_segments.csv"
 segmentation_model_path = r"model/segmentation_model.pkl"
 forecast_model_path = r"model/forecast_model.pkl"
-
+churn_model_path = r"model/churn_model.pkl"
+churn_prediction_path = r"data/processed/churn_prediction.csv"
 
 def main():
     try:
@@ -93,8 +94,10 @@ def main():
             save_forecasting_model(forecast_model,forecast_model_path)
             print(f"FORECASTING METRICS\n{forecast_metrics}")
             print(f"Rs. {next_day_forecast:,.2f}")
-            forecast_fig.show()
+            # forecast_fig.show()
             logging.info("Forecast pipeline run successfully")
+
+            # CHURN PREDICTION
 
 
         else:

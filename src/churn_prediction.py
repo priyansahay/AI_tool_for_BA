@@ -65,10 +65,14 @@ try:
             return "Medium Risk"
         return "Low Risk" 
 
-    def save_churn_model(prediction_df, output_path):
+    def save_churn_model(model, output_path):
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(model,output_path)
+
+    def save_churn_prediction(prediction_df,output_path):
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         prediction_df.to_csv(output_path,index=False)
-
+        
     def churn_prediction_pipeline(churn_df):
         prepared_df = (prepare_churn_data(churn_df))
         x,y = (split_features_target(prepared_df))

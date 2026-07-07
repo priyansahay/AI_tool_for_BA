@@ -7,6 +7,7 @@ from src.visualization import plot_monthly_sales, plot_top_customers, plot_reven
 from src.feature_engineering import feature_engineering_pipeline,save_features_dataset
 from src.customer_segmentation import save_model, save_segmented_data, segmentation_pipeline
 from src.sales_forecasting import forecasting_pipeline, save_forecasting_model
+from src.churn_prediction import save_churn_model,churn_prediction_pipeline,save_churn_prediction
 import pandas as pd
 from pathlib import Path
 
@@ -37,20 +38,20 @@ def main():
             print(f"REVENUE ANALYSIS: \n{revenue_analysis(cleaned_df)}")
 
             #  ------  VISUALITIONS -----
-            # revenue_map = plot_country_revenue_map(cleaned_df)
-            # revenue_map.show()
+            revenue_map = plot_country_revenue_map(cleaned_df)
+            revenue_map.show()
 
-            # coorelation_map = plot_coorelation_heatmap(cleaned_df)
-            # coorelation_map.show()
+            coorelation_map = plot_coorelation_heatmap(cleaned_df)
+            coorelation_map.show()
 
-            # top_products_fig = plot_top_product_treemap(cleaned_df)
-            # top_products_fig.show()
+            top_products_fig = plot_top_product_treemap(cleaned_df)
+            top_products_fig.show()
 
-            # country_revenue = plot_country_revenue_map(cleaned_df)
-            # country_revenue.show()
+            country_revenue = plot_country_revenue_map(cleaned_df)
+            country_revenue.show()
 
-            # monthly_sales_fig = plot_monthly_sales(cleaned_df)
-            # monthly_sales_fig.show()
+            monthly_sales_fig = plot_monthly_sales(cleaned_df)
+            monthly_sales_fig.show()
 
 
 
@@ -94,10 +95,21 @@ def main():
             save_forecasting_model(forecast_model,forecast_model_path)
             print(f"FORECASTING METRICS\n{forecast_metrics}")
             print(f"Rs. {next_day_forecast:,.2f}")
-            # forecast_fig.show()
+            forecast_fig.show()
             logging.info("Forecast pipeline run successfully")
 
             # CHURN PREDICTION
+            logging.info("Churn Prediction started...")
+            churn_output = (churn_prediction_pipeline(churn_feature_df))
+            churn_model = churn_output["model"]
+            churn_metrics = churn_output["metrics"]
+            feature_importance = churn_output["feature_importance"]
+            churn_score = churn_output["churn_scores"]
+            save_churn_model(churn_model,churn_model_path)
+            save_churn_prediction(churn_score,churn_prediction_path)
+            print(f"CHURN METRICS\n{churn_metrics}\n")
+            print(f"TOP CHURN DRIVERS\n{feature_importance.head(10)}\n")
+            logging.info("Churn Prediction ran successfully...")
 
 
         else:

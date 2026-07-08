@@ -1,0 +1,1 @@
+from src.custom_exception import log_exception

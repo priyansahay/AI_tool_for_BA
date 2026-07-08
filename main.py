@@ -53,7 +53,6 @@ def main():
             monthly_sales_fig.show()
 
 
-
             # ---- FEATURE ENFINEERING ----- 
             feature_output = (feature_engineering_pipeline(cleaned_df))
             rfm_df = (feature_output["rfm_df"])

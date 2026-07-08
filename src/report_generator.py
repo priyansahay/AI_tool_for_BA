@@ -24,11 +24,11 @@ def build_prompt(metrics):
             atrisk:{metrics['at_risk']},
             highchurn:{metrics['high_churn']},
             anom:{metrics['anomalies']}
-            summary + actions
+            summary + actions in 10 words
         """
     return prompt
 
-def generate_llm_report(prompt, client = None):
+def generate_llm_report(prompt, client):
     if client is None:
         raise ValueError("LLM Client not provided")
     response = client.model.generate_content(model = "gemini/gemini-2.5-flash",contents=prompt)
@@ -63,3 +63,10 @@ def save_report(report, output_dir = "reports"):
         file.write(report)
     return str(report_path)
 
+def executive_report_pipeline(next_day_forecast,segmented_df,churn_scores,anomaly_results,client):
+    metrics = (create_business_summary(next_day_forecast,segmented_df,churn_scores,anomaly_results))
+    prompt = build_prompt(metrics)
+    if client:
+        report = generate_llm_report(prompt,client)
+    else:
+        report = generate_local_report(metrics)

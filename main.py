@@ -43,16 +43,16 @@ def main():
             print(f"REVENUE ANALYSIS: \n{revenue_analysis(cleaned_df)}")
 
             #  ------  VISUALITIONS -----
-            # revenue_map = plot_country_revenue_map(cleaned_df)
-            # revenue_map.show()
-            # coorelation_map = plot_coorelation_heatmap(cleaned_df)
-            # coorelation_map.show()
-            # top_products_fig = plot_top_product_treemap(cleaned_df)
-            # top_products_fig.show()
-            # country_revenue = plot_country_revenue_map(cleaned_df)
-            # country_revenue.show()
-            # monthly_sales_fig = plot_monthly_sales(cleaned_df)
-            # monthly_sales_fig.show()
+            revenue_map = plot_country_revenue_map(cleaned_df)
+            revenue_map.show()
+            coorelation_map = plot_coorelation_heatmap(cleaned_df)
+            coorelation_map.show()
+            top_products_fig = plot_top_product_treemap(cleaned_df)
+            top_products_fig.show()
+            country_revenue = plot_country_revenue_map(cleaned_df)
+            country_revenue.show()
+            monthly_sales_fig = plot_monthly_sales(cleaned_df)
+            monthly_sales_fig.show()
 
 
             # ---- FEATURE ENFINEERING ----- 
@@ -97,7 +97,7 @@ def main():
             save_forecasting_model(forecast_model,forecast_model_path)
             print(f"FORECASTING METRICS\n{forecast_metrics}")
             print(f"Rs. {next_day_forecast:,.2f}")
-            # forecast_fig.show()
+            forecast_fig.show()
             logging.info("Forecast pipeline run successfully")
 
 
@@ -128,7 +128,7 @@ def main():
             save_anomaly_results(anomaly_results, anomaly_results_path)
             print(f"Anomaly Count{anomaly_count}\n")
             logging.info("Anomaly Detection completed...")
-            # anomaly_fig.show()
+            anomaly_fig.show()
 
             # --- EXECUTIVE REPORT ---
             logging.info("Running exclusive report...")

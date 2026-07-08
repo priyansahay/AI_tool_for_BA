@@ -9,6 +9,8 @@ from src.customer_segmentation import save_model, save_segmented_data, segmentat
 from src.sales_forecasting import forecasting_pipeline, save_forecasting_model
 from src.churn_prediction import save_churn_model,churn_prediction_pipeline,save_churn_prediction
 from src.anomoly_detection import anomaly_detection_pipeline, save_anomaly_model, save_anomaly_results
+from src.gemini_client import client
+from src.report_generator import executive_report_pipeline
 import pandas as pd
 from pathlib import Path
 
@@ -41,16 +43,16 @@ def main():
             print(f"REVENUE ANALYSIS: \n{revenue_analysis(cleaned_df)}")
 
             #  ------  VISUALITIONS -----
-            revenue_map = plot_country_revenue_map(cleaned_df)
-            revenue_map.show()
-            coorelation_map = plot_coorelation_heatmap(cleaned_df)
-            coorelation_map.show()
-            top_products_fig = plot_top_product_treemap(cleaned_df)
-            top_products_fig.show()
-            country_revenue = plot_country_revenue_map(cleaned_df)
-            country_revenue.show()
-            monthly_sales_fig = plot_monthly_sales(cleaned_df)
-            monthly_sales_fig.show()
+            # revenue_map = plot_country_revenue_map(cleaned_df)
+            # revenue_map.show()
+            # coorelation_map = plot_coorelation_heatmap(cleaned_df)
+            # coorelation_map.show()
+            # top_products_fig = plot_top_product_treemap(cleaned_df)
+            # top_products_fig.show()
+            # country_revenue = plot_country_revenue_map(cleaned_df)
+            # country_revenue.show()
+            # monthly_sales_fig = plot_monthly_sales(cleaned_df)
+            # monthly_sales_fig.show()
 
 
             # ---- FEATURE ENFINEERING ----- 
@@ -95,7 +97,7 @@ def main():
             save_forecasting_model(forecast_model,forecast_model_path)
             print(f"FORECASTING METRICS\n{forecast_metrics}")
             print(f"Rs. {next_day_forecast:,.2f}")
-            forecast_fig.show()
+            # forecast_fig.show()
             logging.info("Forecast pipeline run successfully")
 
 
@@ -126,7 +128,13 @@ def main():
             save_anomaly_results(anomaly_results, anomaly_results_path)
             print(f"Anomaly Count{anomaly_count}\n")
             logging.info("Anomaly Detection completed...")
-            anomaly_fig.show()
+            # anomaly_fig.show()
+
+            # --- EXECUTIVE REPORT ---
+            logging.info("Running exclusive report...")
+            report_output = (executive_report_pipeline(next_day_forecast=next_day_forecast, segmented_df=segmented_df,churn_scores=churn_score,anomaly_results=anomaly_results,client=client))
+            print(report_output['report'])
+            logging.info("Exclusive report generated...")
 
 
         else:

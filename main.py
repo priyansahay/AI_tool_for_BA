@@ -11,6 +11,7 @@ from src.churn_prediction import save_churn_model,churn_prediction_pipeline,save
 from src.anomoly_detection import anomaly_detection_pipeline, save_anomaly_model, save_anomaly_results
 from src.gemini_client import client
 from src.report_generator import executive_report_pipeline
+from src.rag_pipeline import  rag_ingestion_pipeline
 import pandas as pd
 from pathlib import Path
 
@@ -73,17 +74,13 @@ def main():
 
             # --- CUSTOMER SEGMENTATION ---
             logging.info("Starting Customer Segmentation..")
-            if Path(segmented_data_path).exists():
-                segmented_df = pd.read_csv(segmented_data_path)
-
-            else:
-                segmentation_output = (segmentation_pipeline(rfm_df,n_clusters=4))
-                segmented_df = (segmentation_output["segmented_df"])
-                cluster_summary_df = (segmentation_output["summary"])
-                segmentation_model = (segmentation_output["model"])
-                save_clean_data(segmented_df,segmented_data_path)
-                save_model(segmentation_model,segmentation_model_path)
-                print(f"{cluster_summary_df}\n")
+            segmentation_output = (segmentation_pipeline(rfm_df,n_clusters=4))
+            segmented_df = (segmentation_output["segmented_df"])
+            cluster_summary_df = (segmentation_output["summary"])
+            segmentation_model = (segmentation_output["model"])
+            save_clean_data(segmented_df,segmented_data_path)
+            save_model(segmentation_model,segmentation_model_path)
+            print(f"{cluster_summary_df}\n")
 
 
             # --- SALES FORECASTING ---
@@ -135,6 +132,15 @@ def main():
             report_output = (executive_report_pipeline(next_day_forecast=next_day_forecast, segmented_df=segmented_df,churn_scores=churn_score,anomaly_results=anomaly_results,client=client))
             print(report_output['report'])
             logging.info("Exclusive report generated...")
+
+            # --- RAG INGESTION PIPELINE ---
+            rag_ingestion_pipeline(
+                report_text=report_output["report"],
+                forecast_metrics= forecasting_output["metrics"],
+                churn_metrics = churn_output["metrics"],
+                anomaly_summary=anomaly_output["summary"].to_dict(),
+                segment_summary= segmentation_output["summary"].to_dict()
+            )
 
 
         else:

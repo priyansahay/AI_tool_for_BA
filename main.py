@@ -14,21 +14,23 @@ from src.report_generator import executive_report_pipeline
 from src.rag_pipeline import  rag_ingestion_pipeline
 import pandas as pd
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+load_dotenv()   
 
-raw_data_path = r"data/raw/Online Retail.xlsx"
-clean_data_path = r"data/processed/Clean File.csv"
-rfm_features_path = r"data/processed/rfm_features.csv"
-rfm_features_path = r"data/processed/rfm_features.csv"
-customers_features_path = r"data/processed/customers_features.csv"
-churn_features_path = r"data/processed/churn_features.csv"
-sales_features_path = r"data/processed/sales_features.csv"
-segmented_data_path = r"data/processed/customer_segments.csv"
-segmentation_model_path = r"model/segmentation_model.pkl"
-forecast_model_path = r"model/forecast_model.pkl"
-churn_model_path = r"model/churn_model.pkl"
-churn_prediction_path = r"data/processed/churn_prediction.csv"
-anomaly_model_path = r"model/anomaly_model.pkl"
-anomaly_results_path = r"data/processed/anomaly_results.csv"
+raw_data_path = os.getenv("raw_data_path")
+clean_data_path = os.getenv("clean_data_path")
+rfm_features_path = os.getenv("rfm_features_path")
+customers_features_path = os.getenv("customers_features_path")
+churn_features_path = os.getenv("churn_features_path")
+sales_features_path = os.getenv("sales_features_path")
+segmented_data_path = os.getenv("segmented_data_path")
+segmentation_model_path = os.getenv("segmentation_model_path")
+forecast_model_path = os.getenv("forecast_model_path")
+churn_model_path = os.getenv("churn_model_path")
+churn_prediction_path = os.getenv("churn_prediction_path")
+anomaly_model_path = os.getenv("anomaly_model_path")
+anomaly_results_path = os.getenv("anomaly_results_path")
 
 def main():
     try:

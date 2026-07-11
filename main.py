@@ -12,6 +12,7 @@ from src.anomoly_detection import anomaly_detection_pipeline, save_anomaly_model
 from src.gemini_client import client
 from src.report_generator import executive_report_pipeline
 from src.rag_pipeline import  rag_ingestion_pipeline
+from src.business_chatbot import ask_question
 import pandas as pd
 from pathlib import Path
 import os
@@ -143,6 +144,10 @@ def main():
                 anomaly_summary=anomaly_output["summary"].to_dict(),
                 segment_summary= segmentation_output["summary"].to_dict()
             )
+
+            # --- BUSINESS CHATBOT ---
+            result = ask_question(question="Why are sales expected to decline in 5 words?", gemini_client=client)
+            print(result["answer"])
 
 
         else:
